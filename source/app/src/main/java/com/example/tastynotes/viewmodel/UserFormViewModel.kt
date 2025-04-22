@@ -1,6 +1,5 @@
 package com.example.tastynotes.viewmodel
 
-import android.content.Context
 import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,14 +9,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.tastynotes.service.AlertManager
 import com.example.tastynotes.constant.Constants
+import com.example.tastynotes.model.Screen
 import com.example.tastynotes.service.DeviceDataService
 import com.example.tastynotes.service.LoadingManager
 import com.example.tastynotes.service.SupabaseService
-import com.example.tastynotes.view.screens.Screen
 import kotlinx.coroutines.launch
 
 class UserFormViewModel(
-    private val context: Context,
     private val navController: NavController,
     private val isLogin: Boolean = false
 ): ViewModel() {
@@ -54,7 +52,7 @@ class UserFormViewModel(
                     message = result.exceptionOrNull()?.message.toString()
                 )
             } else {
-                DeviceDataService.saveUserData(context, username, result.getOrNull().toString())
+                DeviceDataService.saveUserData(username, result.getOrNull().toString())
                 navController.navigate(Screen.Home.route) {
                     popUpTo(0) { inclusive = true }
                 }
@@ -79,6 +77,4 @@ class UserFormViewModel(
             null
         }
     }
-
-
 }

@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.tastynotes.view.screens.AppNavigation
+import com.example.tastynotes.view.screen.AppRoot
 import com.example.tastynotes.ui.theme.TastyNotesTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TastyNotesTheme {
-                AppNavigation()
+                AppRoot()
             }
         }
     }

@@ -17,7 +17,7 @@ private val DarkColorScheme = darkColorScheme(
     surface = Surface,
     onPrimary = Color.White,
     onSecondary = Color.White,
-    onSurface = PrimaryText
+    onSurface = PrimaryText,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -26,7 +26,7 @@ private val LightColorScheme = lightColorScheme(
     surface = Surface,
     onPrimary = Color.White,
     onSecondary = Color.White,
-    onSurface = PrimaryText
+    onSurface = PrimaryText,
 )
 
 @Composable
@@ -35,12 +35,6 @@ fun TastyNotesTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-    // status bar color
-    val view = LocalView.current
-    SideEffect {
-        val window = (view.context as Activity).window
-        window.statusBarColor = colorScheme.background.toArgb()
-    }
 
     MaterialTheme(
         colorScheme = colorScheme,

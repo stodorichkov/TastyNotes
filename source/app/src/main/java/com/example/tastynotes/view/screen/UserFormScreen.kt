@@ -1,4 +1,4 @@
-package com.example.tastynotes.view.screens
+package com.example.tastynotes.view.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,11 +31,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,14 +50,16 @@ import com.example.tastynotes.ui.theme.TastyNotesTheme
 import com.example.tastynotes.view.custom.RoundedButton
 import com.example.tastynotes.viewmodel.UserFormViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserFormScreen(navController: NavController, isLogin: Boolean) {
-    val viewModel = UserFormViewModel(LocalContext.current, navController, isLogin)
+    val viewModel = UserFormViewModel(
+        navController,
+        isLogin
+    )
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
     val title = if (isLogin) R.string.login else R.string.register
-
 
     Scaffold(
         topBar = {
@@ -69,10 +70,10 @@ fun UserFormScreen(navController: NavController, isLogin: Boolean) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = Color.White
                         )
                     }
                 },
+                modifier = Modifier.statusBarsPadding(),
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Background
                 )
@@ -83,8 +84,8 @@ fun UserFormScreen(navController: NavController, isLogin: Boolean) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
-                    .imePadding()
                     .background(Background)
+                    .imePadding()
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -92,16 +93,13 @@ fun UserFormScreen(navController: NavController, isLogin: Boolean) {
                         focusManager.clearFocus()
                     }
             ) {
-
                 Column(
                     modifier = Modifier
-                        .padding(horizontal = 32.dp)
-                        .verticalScroll(scrollState)
-                        .align(Alignment.Center)
+                        .padding(horizontal = 16.dp)
                         .clip(RoundedCornerShape(24.dp))
                         .background(MaterialTheme.colorScheme.surface)
-                        .padding(horizontal = 16.dp, vertical = 30.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                        .padding(horizontal = 16.dp, vertical = 32.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
@@ -110,87 +108,100 @@ fun UserFormScreen(navController: NavController, isLogin: Boolean) {
                         fontWeight = FontWeight.Bold,
                         color = PrimaryText,
                     )
-                    OutlinedTextField(
-                        value = viewModel.username,
-                        onValueChange = { viewModel.username = it },
-                        label = { Text(stringResource(R.string.username)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
-                    )
-                    if (!isLogin) {
+                    HorizontalDivider(thickness = 2.dp)
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(scrollState),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
                         OutlinedTextField(
-                            value = viewModel.email,
-                            onValueChange = { viewModel.email = it },
-                            label = { Text(stringResource(R.string.email)) },
+                            value = viewModel.username,
+                            onValueChange = { viewModel.username = it },
+                            label = { Text(stringResource(R.string.username)) },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true
                         )
-                    }
-                    OutlinedTextField(
-                        value = viewModel.password,
-                        onValueChange = { viewModel.password = it },
-                        label = { Text(stringResource(R.string.password)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        visualTransformation = if (viewModel.passwordVisible) {
-                            VisualTransformation.None
-                        } else {
-                            PasswordVisualTransformation()
-                        },
-                        trailingIcon = {
-                            val image = if (viewModel.passwordVisible)
-                                Icons.Filled.Visibility
-                            else Icons.Filled.VisibilityOff
-
-                            val description = if (viewModel.passwordVisible) {
-                                "Hide password"
-                            } else {
-                                "Show password"
-                            }
-
-                            IconButton(
-                                onClick = { viewModel.passwordVisible= !viewModel.passwordVisible }
-                            ) {
-                                Icon(imageVector = image, contentDescription = description)
-                            }
+                        if (!isLogin) {
+                            OutlinedTextField(
+                                value = viewModel.email,
+                                onValueChange = { viewModel.email = it },
+                                label = { Text(stringResource(R.string.email)) },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true
+                            )
                         }
-                    )
-                    if (!isLogin) {
                         OutlinedTextField(
-                            value = viewModel.confirmPassword,
-                            onValueChange = { viewModel.confirmPassword = it },
-                            label = { Text(stringResource(R.string.confirm)) },
+                            value = viewModel.password,
+                            onValueChange = { viewModel.password = it },
+                            label = { Text(stringResource(R.string.password)) },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
-                            visualTransformation = if (viewModel.confirmPasswordVisible) {
+                            visualTransformation = if (viewModel.passwordVisible) {
                                 VisualTransformation.None
                             } else {
                                 PasswordVisualTransformation()
                             },
                             trailingIcon = {
-                                val image = if (viewModel.confirmPasswordVisible)
+                                val image = if (viewModel.passwordVisible)
                                     Icons.Filled.Visibility
                                 else Icons.Filled.VisibilityOff
 
-                                val description = if (viewModel.confirmPasswordVisible) {
+                                val description = if (viewModel.passwordVisible) {
                                     "Hide password"
                                 } else {
                                     "Show password"
                                 }
 
                                 IconButton(
-                                    onClick = { viewModel.confirmPasswordVisible= !viewModel.confirmPasswordVisible }
+                                    onClick = {
+                                        viewModel.passwordVisible = !viewModel.passwordVisible
+                                    }
                                 ) {
                                     Icon(imageVector = image, contentDescription = description)
                                 }
                             }
                         )
-                    }
-                    RoundedButton(
-                        text = stringResource(title),
-                        color = MaterialTheme.colorScheme.primary
-                    ) {
-                        viewModel.onSubmit()
+                        if (!isLogin) {
+                            OutlinedTextField(
+                                value = viewModel.confirmPassword,
+                                onValueChange = { viewModel.confirmPassword = it },
+                                label = { Text(stringResource(R.string.confirm)) },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true,
+                                visualTransformation = if (viewModel.confirmPasswordVisible) {
+                                    VisualTransformation.None
+                                } else {
+                                    PasswordVisualTransformation()
+                                },
+                                trailingIcon = {
+                                    val image = if (viewModel.confirmPasswordVisible)
+                                        Icons.Filled.Visibility
+                                    else Icons.Filled.VisibilityOff
+
+                                    val description = if (viewModel.confirmPasswordVisible) {
+                                        "Hide password"
+                                    } else {
+                                        "Show password"
+                                    }
+
+                                    IconButton(
+                                        onClick = {
+                                            viewModel.confirmPasswordVisible =
+                                                !viewModel.confirmPasswordVisible
+                                        }
+                                    ) {
+                                        Icon(imageVector = image, contentDescription = description)
+                                    }
+                                }
+                            )
+                        }
+                        RoundedButton(
+                            text = stringResource(title),
+                            color = MaterialTheme.colorScheme.primary
+                        ) {
+                            viewModel.onSubmit()
+                        }
                     }
                 }
             }

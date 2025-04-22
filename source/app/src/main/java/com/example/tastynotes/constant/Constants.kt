@@ -1,7 +1,11 @@
 package com.example.tastynotes.constant
 
+import com.example.tastynotes.model.Recipe
+
+
 object Constants {
     val WARNING = "Warning"
+    val SUCCESS = "Success"
 
     // Supabase
     val SUPABASE= "Supabase"
@@ -17,6 +21,12 @@ object Constants {
     // Sign in messages
     val SIGN_IN = "Sign In"
     val SIGN_IN_FAILED = "Wrong username or password"
+    val SIGN_IN_FAILED_PASSWORD = "Password"
+    val SIGN_IN_FAILED_USER = "User not found"
+
+    // Recipe
+    val RECIPE_ADD = "Recipe Add"
+    val ADD_FAILED = "Something went wrong"
 
     // Validation messages
     val FORM_EMPTY = "You must fill the form"

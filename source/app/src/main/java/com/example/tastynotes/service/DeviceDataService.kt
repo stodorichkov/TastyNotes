@@ -1,10 +1,17 @@
 package com.example.tastynotes.service
 
 import android.content.Context
+import android.content.SharedPreferences
+
 
 object DeviceDataService {
-    fun saveUserData(context: Context, username: String, id: String) {
-        val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+    private lateinit var sharedPreferences: SharedPreferences
+
+    fun init(context: Context) {
+        sharedPreferences = context.applicationContext.getSharedPreferences("my_pref", Context.MODE_PRIVATE)
+    }
+
+    fun saveUserData(username: String, id: String) {
         with(sharedPreferences.edit()) {
             putString("username", username)
             putString("id", id)
@@ -12,17 +19,15 @@ object DeviceDataService {
         }
     }
 
-    fun getUserId(context: Context): String? {
-        val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+    fun getUserId(): String? {
         return sharedPreferences.getString("id", null)
     }
-    fun getUsername(context: Context): String? {
-        val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+
+    fun getUsername(): String? {
         return sharedPreferences.getString("username", null)
     }
 
-    fun resetUserData(context: Context) {
-        val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+    fun resetUserData() {
         with(sharedPreferences.edit()) {
             clear()
             apply()

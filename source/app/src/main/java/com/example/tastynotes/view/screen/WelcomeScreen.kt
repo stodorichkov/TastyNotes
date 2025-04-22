@@ -1,4 +1,4 @@
-package com.example.tastynotes.view.screens
+package com.example.tastynotes.view.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.tastynotes.R
+import com.example.tastynotes.model.Screen
 import com.example.tastynotes.ui.theme.Background
 import com.example.tastynotes.ui.theme.GrayText
 import com.example.tastynotes.ui.theme.LogoText

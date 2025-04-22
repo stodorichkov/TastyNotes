@@ -18,7 +18,7 @@ fun RoundedButton(text: String, color: Color, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp),
-        shape = RoundedCornerShape(50), // напълно закръглени
+        shape = RoundedCornerShape(50),
         colors = ButtonDefaults.buttonColors(
             containerColor = color
         )
