@@ -65,7 +65,10 @@ object SupabaseService {
                 }
                 // Save user
                 user = User(username = username, email = email, password = hashPassword)
-                supabase.from(users).insert(user)
+                user = supabase.from(users).insert(user) {
+                    select()
+                }.decodeSingle()
+
 
                 logInfo(Constants.SIGN_UP, Constants.SUCCESS)
                 Result.success(user.id)
