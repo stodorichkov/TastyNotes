@@ -1,5 +1,7 @@
 package com.example.tastynotes.view.screen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -38,13 +40,13 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.tastynotes.model.formatTime
 import com.example.tastynotes.ui.theme.Background
 import com.example.tastynotes.ui.theme.GrayText
 import com.example.tastynotes.ui.theme.Primary
 import com.example.tastynotes.ui.theme.PrimaryText
 import com.example.tastynotes.viewmodel.RecipeViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeScreen(viewModel: RecipeViewModel) {
@@ -126,6 +128,7 @@ fun RecipeScreen(viewModel: RecipeViewModel) {
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RecipeDetail(viewModel: RecipeViewModel) {
     val scrollState = rememberScrollState()
@@ -148,7 +151,7 @@ fun RecipeDetail(viewModel: RecipeViewModel) {
             color = GrayText,
         )
         Text(
-            text = formatTime(viewModel.recipe.timestamp),
+            text = viewModel.recipe.formatTime(),
             fontSize = 16.sp,
             color = GrayText,
         )
