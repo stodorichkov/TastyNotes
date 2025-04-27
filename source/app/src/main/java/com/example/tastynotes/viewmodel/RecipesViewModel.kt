@@ -1,7 +1,5 @@
 package com.example.tastynotes.viewmodel
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,12 +8,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.tastynotes.model.Recipe
 import com.example.tastynotes.model.Screen
+import com.example.tastynotes.service.LoadingManager
 import com.example.tastynotes.service.SupabaseService
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 class RecipesViewModel(
     val navController: NavController,
@@ -25,15 +21,21 @@ class RecipesViewModel(
 
     init {
         viewModelScope.launch {
-            recipes = if (isMine) {
-                SupabaseService.getMineRecipes()
-            } else {
-                SupabaseService.getRecipes()
-            }
+            recipes = SupabaseService.getRecipes(onlyMine = isMine)
         }
     }
 
-    fun showDetails(recipe: Recipe) {
-        navController.navigate(Screen.Recipe.route + "/${Json.encodeToString(recipe)}")
+    fun showDetails(recipeID: Int?) {
+        LoadingManager.show()
+        viewModelScope.launch {
+            val result = SupabaseService.getRecipeByID(recipeID)
+
+            LoadingManager.dismiss()
+            if(result.isFailure) {
+
+            } else {
+                navController.navigate(Screen.Recipe.route + "/${Json.encodeToString(result.getOrNull())}")
+            }
+        }
     }
 }

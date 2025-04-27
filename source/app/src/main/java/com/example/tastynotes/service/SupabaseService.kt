@@ -8,7 +8,6 @@ import com.example.tastynotes.model.Product
 import com.example.tastynotes.model.Recipe
 import com.example.tastynotes.model.Step
 import com.example.tastynotes.model.User
-import io.github.jan.supabase.annotations.SupabaseExperimental
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.exception.AuthRestException
@@ -139,31 +138,43 @@ object SupabaseService {
             Result.success(null)
         } catch (e: PostgrestRestException) {
             logError(Constants.RECIPE_ADD, e.localizedMessage)
-            Result.failure(Exception(Constants.ADD_FAILED))
+            Result.failure(Exception(Constants.RECIPE_ADD_FAILED))
         }
     }
 
-    suspend fun getRecipes(): List<Recipe> {
+    suspend fun getRecipes(onlyMine: Boolean = false): List<Recipe> {
         return supabase.from(recipes).select(Columns.raw(
-            "id, name, timestamp, " +
-            "users(id, username), " +
-            "ingredients(products(*), quantity), " +
-            "steps(id, text)"
-        )).decodeList()
-    }
-
-    suspend fun getMineRecipes(): List<Recipe> {
-        return supabase.from(recipes).select(Columns.raw(
-            "id, name, timestamp, " +
-                    "users(id, username), " +
-                    "ingredients(products(*), quantity), " +
-                    "steps(id, text)"
+            "id, name, timestamp, users(id, username)"
         )){
-            filter {
-                eq("author_id", DeviceDataService.getUserId().toString())
+            if (onlyMine) {
+                filter {
+                    eq("author_id", DeviceDataService.getUserId().toString())
+                }
             }
         }.decodeList()
     }
+
+    suspend fun getRecipeByID(id: Int?): Result<Recipe> {
+        return if (id != null) {
+            val result: Recipe = supabase.from(recipes).select(
+                Columns.raw(
+                    "id, name, timestamp, users(id, username), " +
+                            "ingredients(products(*), quantity), steps(id, text)"
+                )
+            ) {
+                filter {
+                    eq("id", id)
+                }
+            }.decodeSingle()
+
+            logInfo(Constants.RECIPE_GET, Constants.SUCCESS)
+            Result.success(result)
+        } else {
+            logError(Constants.RECIPE_GET, Constants.RECIPE_GET_FAILED)
+            Result.failure(Exception(Constants.RECIPE_GET_FAILED))
+        }
+    }
+
 
     private fun logError(reason: String, message: String?) {
         Log.e(Constants.SUPABASE, "${reason}: ${message}")

@@ -49,7 +49,7 @@ fun RecipesScreen(viewModel : RecipesViewModel) {
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
                         ) {
-                            viewModel.showDetails(recipe)
+                            viewModel.showDetails(recipe.id)
                         },
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.Start,

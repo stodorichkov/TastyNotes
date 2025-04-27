@@ -1,7 +1,5 @@
 package com.example.tastynotes.constant
 
-import com.example.tastynotes.model.Recipe
-
 
 object Constants {
     val WARNING = "Warning"
@@ -26,7 +24,9 @@ object Constants {
 
     // Recipe
     val RECIPE_ADD = "Recipe Add"
-    val ADD_FAILED = "Something went wrong"
+    val RECIPE_ADD_FAILED = "Something went wrong"
+    val RECIPE_GET= "Recipe Get"
+    val RECIPE_GET_FAILED = "Recipe with id not found"
 
     // Validation messages
     val FORM_EMPTY = "You must fill the form"
