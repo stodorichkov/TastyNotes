@@ -9,5 +9,5 @@ data class Step(
     val id: Int? = null,
     val text: String,
     @SerialName("recipe_id")
-    val recipeId: Int? = null
+    var recipeId: Int? = null
 )

@@ -3,7 +3,6 @@ package com.example.tastynotes.service
 import android.util.Log
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.example.tastynotes.constant.Constants
-import com.example.tastynotes.model.Ingredient
 import com.example.tastynotes.model.Product
 import com.example.tastynotes.model.Recipe
 import com.example.tastynotes.model.Step
@@ -31,7 +30,6 @@ object SupabaseService {
 
     private val users = "users"
     private val recipes = "recipes"
-    private val ingredients = "ingredients"
     private val products = "products"
     private val steps = "steps"
 
@@ -124,15 +122,38 @@ object SupabaseService {
         }
     }
 
-    suspend fun getProducts(): List<Product> {
-        return supabase.from(products).select().decodeList()
+    suspend fun addRecipe(recipe: Recipe): Result<Recipe> {
+        return try {
+            val recipe = supabase.from(recipes).insert(recipe) {
+                select()
+            }.decodeSingle<Recipe>()
+
+            logInfo(Constants.RECIPE_ADD, Constants.SUCCESS)
+            Result.success(recipe)
+        } catch (e: PostgrestRestException) {
+            logError(Constants.RECIPE_ADD, e.localizedMessage)
+            Result.failure(Exception(Constants.RECIPE_ADD_FAILED))
+        }
     }
 
-    suspend fun addRecipe(recipe: Recipe, ingredients: List<Ingredient>, steps: List<Step>): Result<String?> {
+
+    suspend fun addProducts(products: List<Product>): Result<String?> {
         return try {
-            supabase.from(recipes).insert(recipe)
-            supabase.from(this.ingredients).insert(ingredients)
+            supabase.from(this.products).insert(products)
+
+            logInfo(Constants.RECIPE_ADD, Constants.SUCCESS)
+            Result.success(null)
+        } catch (e: PostgrestRestException) {
+            logError(Constants.RECIPE_ADD, e.localizedMessage)
+            Result.failure(Exception(Constants.RECIPE_ADD_FAILED))
+        }
+    }
+
+    suspend fun addSteps(steps: List<Step>): Result<String?> {
+        return try {
             supabase.from(this.steps).insert(steps)
+
+            supabase.
 
             logInfo(Constants.RECIPE_ADD, Constants.SUCCESS)
             Result.success(null)
@@ -159,7 +180,7 @@ object SupabaseService {
             val result: Recipe = supabase.from(recipes).select(
                 Columns.raw(
                     "id, name, timestamp, users(id, username), " +
-                            "ingredients(products(*), quantity), steps(id, text)"
+                    "products(id, name, quantity), steps(id, text)"
                 )
             ) {
                 filter {

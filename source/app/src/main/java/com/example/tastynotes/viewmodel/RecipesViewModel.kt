@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.tastynotes.constant.Constants
 import com.example.tastynotes.model.Recipe
 import com.example.tastynotes.model.Screen
+import com.example.tastynotes.service.AlertManager
 import com.example.tastynotes.service.LoadingManager
 import com.example.tastynotes.service.SupabaseService
 import kotlinx.coroutines.launch
@@ -33,7 +35,10 @@ class RecipesViewModel(
 
             LoadingManager.dismiss()
             if(result.isFailure) {
-
+                AlertManager.show(
+                    title = Constants.WARNING,
+                    message = result.exceptionOrNull()?.message.toString()
+                )
             } else {
                 navController.navigate(Screen.Recipe.route + "/${Json.encodeToString(result.getOrNull())}")
             }

@@ -40,14 +40,8 @@ fun AppRoot() {
         composable(Screen.Home.route) {
             HomeScreen(navController)
         }
-        composable(Screen.RecipeForm.route+"/{products}") { backStackEntry ->
-            val str = backStackEntry.arguments?.getString("products")
-            val products = str?.let {
-                Json.decodeFromString<List<Product>>(it)
-            }
-            if (products != null) {
-                RecipeForm(RecipeFormViewModel(navController, products))
-            }
+        composable(Screen.RecipeForm.route) { backStackEntry ->
+            RecipeForm(RecipeFormViewModel(navController))
         }
         composable(Screen.Recipe.route+"/{recipe}") { backStackEntry ->
             val str = backStackEntry.arguments?.getString("recipe")

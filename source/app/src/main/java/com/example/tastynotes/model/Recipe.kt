@@ -16,7 +16,7 @@ data class Recipe(
     val author: User? = null,
     val timestamp: Instant? = null,
     val steps: List<Step> = emptyList(),
-    val ingredients: List<Ingredient> = emptyList()
+    val products: List<Product> = emptyList()
 ) {
 
     @RequiresApi(Build.VERSION_CODES.O)

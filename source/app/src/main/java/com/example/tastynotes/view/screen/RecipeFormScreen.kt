@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tastynotes.model.Product
 import com.example.tastynotes.model.Step
 import com.example.tastynotes.ui.theme.Background
 import com.example.tastynotes.ui.theme.GrayText
@@ -151,7 +152,7 @@ fun RecipeFormDetail(viewModel: RecipeFormViewModel) {
             text = "Add recipe",
             color = MaterialTheme.colorScheme.primary
         ) {
-
+            viewModel.addProduct()
         }
     }
 }
@@ -203,7 +204,7 @@ fun RecipeFormSteps(viewModel: RecipeFormViewModel) {
             text = "Add recipe",
             color = MaterialTheme.colorScheme.primary
         ) {
-
+            viewModel.addProduct()
         }
     }
 }
@@ -219,7 +220,7 @@ fun RecipeFormIngredients(viewModel: RecipeFormViewModel) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.Start,
     ) {
-        viewModel.steps.forEachIndexed { index, step ->
+        viewModel.products.forEachIndexed { index, product ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -227,15 +228,25 @@ fun RecipeFormIngredients(viewModel: RecipeFormViewModel) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedTextField(
-                    value = step.text,
+                    value = product.name,
                     onValueChange = {
-                        viewModel.steps[index] = step.copy(text = it)
+                        viewModel.products[index] = product.copy(name = it, quantity = viewModel.products[index].quantity)
                     },
-                    label = { Text("Step") },
-                    singleLine = true
+                    label = { Text("Product") },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f)
+                )
+                OutlinedTextField(
+                    value = product.quantity,
+                    onValueChange = {
+                        viewModel.products[index] = product.copy(name = viewModel.products[index].name, quantity = it)
+                    },
+                    label = { Text("Quantity") },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f)
                 )
                 IconButton(onClick = {
-                    viewModel.steps.removeAt(index)
+                    viewModel.products.removeAt(index)
                 }) {
                     Icon(
                         Icons.Default.Close,
@@ -246,16 +257,16 @@ fun RecipeFormIngredients(viewModel: RecipeFormViewModel) {
             }
         }
         RoundedButton(
-            text = "Add step",
+            text = "Add Ingredient",
             color = MaterialTheme.colorScheme.secondary
         ) {
-            viewModel.steps.add(Step(text = ""))
+            viewModel.products.add(Product(name = "", quantity = ""))
         }
         RoundedButton(
             text = "Add recipe",
             color = MaterialTheme.colorScheme.primary
         ) {
-
+            viewModel.addProduct()
         }
     }
 }

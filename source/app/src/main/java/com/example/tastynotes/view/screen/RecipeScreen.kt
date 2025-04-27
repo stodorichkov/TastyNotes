@@ -167,24 +167,19 @@ fun RecipeIngredients(viewModel: RecipeViewModel) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.Start,
     ) {
-        viewModel.recipe.ingredients.forEachIndexed { index, ingredient ->
+        viewModel.recipe.products.forEachIndexed { index, product ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = ingredient.product?.name.toString(),
+                    text = product.name,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = PrimaryText,
                 )
                 Text(
-                    text = ingredient.quantity.toString(),
-                    fontSize = 16.sp,
-                    color = GrayText,
-                )
-                Text(
-                    text = ingredient.product?.unit.toString(),
+                    text = product.quantity,
                     fontSize = 16.sp,
                     color = GrayText,
                 )

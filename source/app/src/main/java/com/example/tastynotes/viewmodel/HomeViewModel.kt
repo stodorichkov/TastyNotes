@@ -33,12 +33,6 @@ class HomeViewModel(
     var selectedItem by mutableIntStateOf(0)
 
     fun addRecipe() {
-        LoadingManager.show()
-        viewModelScope.launch {
-            val products = SupabaseService.getProducts()
-
-            LoadingManager.dismiss()
-            navController.navigate(Screen.RecipeForm.route + "/${Json.encodeToString(products)}")
-        }
+        navController.navigate(Screen.RecipeForm.route)
     }
 }
