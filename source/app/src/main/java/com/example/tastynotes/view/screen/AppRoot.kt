@@ -7,12 +7,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.tastynotes.model.Product
 import com.example.tastynotes.model.Recipe
 import com.example.tastynotes.model.Screen
 import com.example.tastynotes.service.DeviceDataService
 import com.example.tastynotes.view.custom.Alert
 import com.example.tastynotes.view.custom.Loading
 import com.example.tastynotes.viewmodel.AppRootViewModel
+import com.example.tastynotes.viewmodel.RecipeFormViewModel
 import com.example.tastynotes.viewmodel.RecipeViewModel
 import kotlinx.serialization.json.Json
 
@@ -38,8 +40,14 @@ fun AppRoot() {
         composable(Screen.Home.route) {
             HomeScreen(navController)
         }
-        composable(Screen.RecipeForm.route) { previous ->
-            RecipeForm(navController)
+        composable(Screen.RecipeForm.route+"/{products}") { backStackEntry ->
+            val str = backStackEntry.arguments?.getString("products")
+            val products = str?.let {
+                Json.decodeFromString<List<Product>>(it)
+            }
+            if (products != null) {
+                RecipeForm(RecipeFormViewModel(navController, products))
+            }
         }
         composable(Screen.Recipe.route+"/{recipe}") { backStackEntry ->
             val str = backStackEntry.arguments?.getString("recipe")

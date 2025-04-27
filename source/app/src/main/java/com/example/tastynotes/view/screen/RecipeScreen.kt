@@ -121,7 +121,6 @@ fun RecipeScreen(viewModel: RecipeViewModel) {
                         2 -> RecipeSteps(viewModel)
                         else -> "Empty tab"
                     }
-
                 }
             }
         }
@@ -205,7 +204,6 @@ fun RecipeSteps(viewModel: RecipeViewModel) {
         horizontalAlignment = Alignment.Start,
     ) {
         viewModel.recipe.steps.forEachIndexed { index, step ->
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)

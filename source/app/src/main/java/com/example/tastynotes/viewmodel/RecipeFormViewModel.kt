@@ -6,17 +6,23 @@ import androidx.compose.material.icons.filled.FoodBank
 import androidx.compose.material.icons.filled.TurnedIn
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.tastynotes.model.Ingredient
 import com.example.tastynotes.model.NavItem
 import com.example.tastynotes.model.Product
+import com.example.tastynotes.model.Recipe
+import com.example.tastynotes.model.Step
 import com.example.tastynotes.service.SupabaseService
 import kotlinx.coroutines.launch
 
 class RecipeFormViewModel(
-    private val navController: NavController
+    val navController: NavController,
+    val products: List<Product>
 ): ViewModel() {
     val navItems = listOf(
         NavItem("Details", Icons.Default.FoodBank),
@@ -24,11 +30,8 @@ class RecipeFormViewModel(
         NavItem("Steps", Icons.Default.Add),
     )
     var selectedItem by mutableIntStateOf(0)
-    var products: List<Product> = emptyList()
+    var ingredients: List<Ingredient> = emptyList()
 
-    init {
-        viewModelScope.launch {
-            products = SupabaseService.getProducts()
-        }
-    }
+    var name by mutableStateOf("")
+    val steps = mutableStateListOf<Step>()
 }

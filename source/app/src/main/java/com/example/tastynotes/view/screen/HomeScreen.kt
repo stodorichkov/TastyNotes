@@ -60,8 +60,7 @@ fun HomeScreen(navController: NavController) {
                         IconButton(
                             modifier = Modifier.clip(CircleShape)
                                 .background(Primary),
-
-                            onClick = { navController.navigate(Screen.RecipeForm.route) }
+                            onClick = { viewModel.addRecipe() }
                         ) {
                             Icon(
                                 Icons.Default.Add,

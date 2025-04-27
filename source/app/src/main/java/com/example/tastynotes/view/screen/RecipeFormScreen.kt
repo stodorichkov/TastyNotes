@@ -6,10 +6,10 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -19,13 +19,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -37,13 +37,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.modifier.modifierLocalOf
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import com.example.tastynotes.model.Step
 import com.example.tastynotes.ui.theme.Background
 import com.example.tastynotes.ui.theme.GrayText
 import com.example.tastynotes.ui.theme.Primary
@@ -53,17 +52,15 @@ import com.example.tastynotes.viewmodel.RecipeFormViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecipeForm(navController: NavController) {
-    val viewModel = RecipeFormViewModel(navController)
+fun RecipeForm(viewModel: RecipeFormViewModel) {
     val focusManager = LocalFocusManager.current
-    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {Text("")},
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { viewModel.navController.popBackStack() }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
@@ -121,110 +118,144 @@ fun RecipeForm(navController: NavController) {
                             )
                         }
                     }
-                    Column(
-                        modifier = Modifier
-                            .verticalScroll(scrollState),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-
-//                        OutlinedTextField(
-//                            value = viewModel.username,
-//                            onValueChange = { viewModel.username = it },
-//                            label = { Text(stringResource(R.string.username)) },
-//                            modifier = Modifier.fillMaxWidth(),
-//                            singleLine = true
-//                        )
-//                        if (!isLogin) {
-//                            OutlinedTextField(
-//                                value = viewModel.email,
-//                                onValueChange = { viewModel.email = it },
-//                                label = { Text(stringResource(R.string.email)) },
-//                                modifier = Modifier.fillMaxWidth(),
-//                                singleLine = true
-//                            )
-//                        }
-//                        OutlinedTextField(
-//                            value = viewModel.password,
-//                            onValueChange = { viewModel.password = it },
-//                            label = { Text(stringResource(R.string.password)) },
-//                            modifier = Modifier.fillMaxWidth(),
-//                            singleLine = true,
-//                            visualTransformation = if (viewModel.passwordVisible) {
-//                                VisualTransformation.None
-//                            } else {
-//                                PasswordVisualTransformation()
-//                            },
-//                            trailingIcon = {
-//                                val image = if (viewModel.passwordVisible)
-//                                    Icons.Filled.Visibility
-//                                else Icons.Filled.VisibilityOff
-//
-//                                val description = if (viewModel.passwordVisible) {
-//                                    "Hide password"
-//                                } else {
-//                                    "Show password"
-//                                }
-//
-//                                IconButton(
-//                                    onClick = {
-//                                        viewModel.passwordVisible = !viewModel.passwordVisible
-//                                    }
-//                                ) {
-//                                    Icon(imageVector = image, contentDescription = description)
-//                                }
-//                            }
-//                        )
-//                        if (!isLogin) {
-//                            OutlinedTextField(
-//                                value = viewModel.confirmPassword,
-//                                onValueChange = { viewModel.confirmPassword = it },
-//                                label = { Text(stringResource(R.string.confirm)) },
-//                                modifier = Modifier.fillMaxWidth(),
-//                                singleLine = true,
-//                                visualTransformation = if (viewModel.confirmPasswordVisible) {
-//                                    VisualTransformation.None
-//                                } else {
-//                                    PasswordVisualTransformation()
-//                                },
-//                                trailingIcon = {
-//                                    val image = if (viewModel.confirmPasswordVisible)
-//                                        Icons.Filled.Visibility
-//                                    else Icons.Filled.VisibilityOff
-//
-//                                    val description = if (viewModel.confirmPasswordVisible) {
-//                                        "Hide password"
-//                                    } else {
-//                                        "Show password"
-//                                    }
-//
-//                                    IconButton(
-//                                        onClick = {
-//                                            viewModel.confirmPasswordVisible =
-//                                                !viewModel.confirmPasswordVisible
-//                                        }
-//                                    ) {
-//                                        Icon(imageVector = image, contentDescription = description)
-//                                    }
-//                                }
-//                            )
-//                        }
-//                        RoundedButton(
-//                            text = stringResource(title),
-//                            color = MaterialTheme.colorScheme.primary
-//                        ) {
-//                            viewModel.onSubmit()
-//                        }
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    RoundedButton(
-                        text = "Add recipe",
-                        color = MaterialTheme.colorScheme.primary
-                    ) {
-
+                    when (viewModel.selectedItem) {
+                        0 -> RecipeFormDetail(viewModel)
+                        1 -> RecipeFormIngredients(viewModel)
+                        2 -> RecipeFormSteps(viewModel)
+                        else -> "Empty tab"
                     }
                 }
             }
         }
     )
+}
+
+@Composable
+fun RecipeFormDetail(viewModel: RecipeFormViewModel) {
+    val scrollState = rememberScrollState()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(scrollState),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        OutlinedTextField(
+            value = viewModel.name,
+            onValueChange = { viewModel.name = it },
+            label = { Text("Name") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+        RoundedButton(
+            text = "Add recipe",
+            color = MaterialTheme.colorScheme.primary
+        ) {
+
+        }
+    }
+}
+
+@Composable
+fun RecipeFormSteps(viewModel: RecipeFormViewModel) {
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(scrollState),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        viewModel.steps.forEachIndexed { index, step ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedTextField(
+                    value = step.text,
+                    onValueChange = {
+                        viewModel.steps[index] = step.copy(text = it)
+                    },
+                    label = { Text("Step") },
+                    singleLine = true
+                )
+                IconButton(onClick = {
+                    viewModel.steps.removeAt(index)
+                }) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "Back",
+                        tint = Color.Red
+                    )
+                }
+            }
+        }
+        RoundedButton(
+            text = "Add step",
+            color = MaterialTheme.colorScheme.secondary
+        ) {
+            viewModel.steps.add(Step(text = ""))
+        }
+        RoundedButton(
+            text = "Add recipe",
+            color = MaterialTheme.colorScheme.primary
+        ) {
+
+        }
+    }
+}
+
+@Composable
+fun RecipeFormIngredients(viewModel: RecipeFormViewModel) {
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(scrollState),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        viewModel.steps.forEachIndexed { index, step ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedTextField(
+                    value = step.text,
+                    onValueChange = {
+                        viewModel.steps[index] = step.copy(text = it)
+                    },
+                    label = { Text("Step") },
+                    singleLine = true
+                )
+                IconButton(onClick = {
+                    viewModel.steps.removeAt(index)
+                }) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "Back",
+                        tint = Color.Red
+                    )
+                }
+            }
+        }
+        RoundedButton(
+            text = "Add step",
+            color = MaterialTheme.colorScheme.secondary
+        ) {
+            viewModel.steps.add(Step(text = ""))
+        }
+        RoundedButton(
+            text = "Add recipe",
+            color = MaterialTheme.colorScheme.primary
+        ) {
+
+        }
+    }
 }
