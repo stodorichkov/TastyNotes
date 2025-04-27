@@ -6,8 +6,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -15,6 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -31,7 +37,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +48,7 @@ import com.example.tastynotes.ui.theme.Background
 import com.example.tastynotes.ui.theme.GrayText
 import com.example.tastynotes.ui.theme.Primary
 import com.example.tastynotes.ui.theme.PrimaryText
+import com.example.tastynotes.view.custom.RoundedButton
 import com.example.tastynotes.viewmodel.RecipeFormViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,7 +92,9 @@ fun RecipeForm(navController: NavController) {
             ) {
                 Column(
                     modifier = Modifier
+                        .fillMaxSize()
                         .padding(horizontal = 16.dp)
+                        .navigationBarsPadding()
                         .clip(RoundedCornerShape(24.dp))
                         .background(MaterialTheme.colorScheme.surface)
                         .padding(horizontal = 16.dp, vertical = 32.dp),
@@ -204,6 +215,13 @@ fun RecipeForm(navController: NavController) {
 //                        ) {
 //                            viewModel.onSubmit()
 //                        }
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    RoundedButton(
+                        text = "Add recipe",
+                        color = MaterialTheme.colorScheme.primary
+                    ) {
+
                     }
                 }
             }

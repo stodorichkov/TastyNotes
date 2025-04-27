@@ -53,7 +53,6 @@ fun RecipesScreen(viewModel : RecipesViewModel) {
                         },
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalAlignment = Alignment.Start,
-
                 ) {
                     Text(
                         text = recipe.name,
